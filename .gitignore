@@ -1,0 +1,10 @@
+.vscode
+.imi
+
+env
+.env
+
+build
+dist
+release
+target
