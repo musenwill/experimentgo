@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-/* Vellus is an interface defines the abilities of vellus */
+/*Vellus is an interface defines the abilities of vellus */
 type Vellus interface {
 	// add a job to excute
 	Excute(func())
@@ -20,7 +20,7 @@ type pool struct {
 	nWorker chan bool
 }
 
-/* NewVellus is a Vellus creator that can limit the max amount of goroutines at any time */
+/*NewVellus is a Vellus creator that can limit the max amount of goroutines at any time */
 func NewVellus(size int) Vellus {
 	pool := &pool{
 		nWorker: make(chan bool, size),
@@ -30,7 +30,7 @@ func NewVellus(size int) Vellus {
 	return pool
 }
 
-/* Excute let you put a job into vellus.
+/*Excute let you put a job into vellus.
 If excute all workers in a goroutine, be sure call Wait() after the goroutine has finished, eg:
 pool := NewWorkerPool(10)
 var wg sync.WaitGroup
@@ -46,19 +46,20 @@ go func() {
 wg.Wait()	// this make sure go func() has finished, and all workers are be putted into pool
 pool.Wait(nil)
 */
-func (this *pool) Excute(c func()) {
-	this.nWorker <- true // acquire token
-	this.nWait.Add(1)
+func (p *pool) Excute(c func()) {
+	p.nWorker <- true // acquire token
+	p.nWait.Add(1)
 	go func() {
-		defer this.nWait.Done()
-		defer func() { <-this.nWorker }() // release token
+		defer p.nWait.Done()
+		defer func() { <-p.nWorker }() // release token
 		c()
 	}()
 }
 
-func (this *pool) Wait(c func()) {
-	this.nWait.Done() // correspond to nWait.Add(1) in NewVellus()
-	this.nWait.Wait()
+/*Wait for all goroutines to end */
+func (p *pool) Wait(c func()) {
+	p.nWait.Done() // correspond to nWait.Add(1) in NewVellus()
+	p.nWait.Wait()
 	if nil != c {
 		c()
 	}
