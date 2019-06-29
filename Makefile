@@ -8,6 +8,13 @@ BINARY := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
 LDFLAGS= -ldflags "-X main.Version=${HEAD} -X main.BuildTime=${TIME}"
 
+UNAME = $(shell uname)
+ifeq (${UNAME}, Darwin)
+	os=darwin
+else
+	os=linux
+endif
+
 build: lint spell
 	${GO_EXECUTABLE} build ${LDFLAGS} -o ${BINARY}
 
@@ -20,6 +27,7 @@ spell:
 
 clean:
 	rm -f ${BINARY}
+	rm -rf dist
 
 build-all:
 	gox -verbose \
