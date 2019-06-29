@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 var (
 	// Version should be a git tag
 	Version = ""
@@ -18,5 +20,6 @@ func init() {
 }
 
 func main() {
-
+	fmt.Println(Version)
+	fmt.Println(BuildTime)
 }

@@ -1,7 +1,6 @@
 GO_EXECUTABLE ?= go
 LINT_TOOL ?= golint
 HEAD = `git describe --abbrev=0 --tags`
-HEAD = 1.0.0
 TIME = `date +%FT%T%z`
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
