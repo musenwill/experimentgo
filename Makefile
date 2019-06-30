@@ -1,5 +1,5 @@
 GO_EXECUTABLE ?= go
-LINT_TOOL ?= golint
+LINT_TOOL ?= golint ./...
 HEAD = `git describe --abbrev=0 --tags`
 TIME = `date +%FT%T%z`
 
