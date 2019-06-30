@@ -9,7 +9,8 @@ import (
 
 // use command `nc localhost 80001` to monitor client
 
-func start() {
+// StartClockServer ...
+func StartClockServer() {
 	listener, err := net.Listen("tcp", "localhost:8000")
 	if err != nil {
 		log.Fatal(err)
