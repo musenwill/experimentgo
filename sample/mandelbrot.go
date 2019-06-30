@@ -10,6 +10,7 @@ func mandelbrot(a complex128) (z complex128) {
 	return
 }
 
+// DrawMandelbrot ...
 func DrawMandelbrot() {
 	for y := 1.0; y >= -1.0; y -= 0.05 {
 		for x := -2.0; x <= 0.5; x += 0.0315 {
