@@ -10,7 +10,7 @@ var _ StateMachine = &stateContext{}
 type stateContext struct {
 	sync.Mutex
 	currentState State
-	exitState State
+	exitState    State
 	table        map[State]map[Event]Instruct
 }
 
@@ -18,7 +18,7 @@ type stateContext struct {
 func New(exitState State) StateMachine {
 	return &stateContext{
 		exitState: exitState,
-		table: map[State]map[Event]Instruct{},
+		table:     map[State]map[Event]Instruct{},
 	}
 }
 

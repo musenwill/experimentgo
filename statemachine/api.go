@@ -22,8 +22,8 @@ type StateMachine interface {
 // Instruct is an interface defines the reaction of an event to a statemchine
 type Instruct struct {
 	Condition func(state State, event Event, data interface{}) error
-	Action func(state State, event Event, data interface{}) error
-	NewState State
+	Action    func(state State, event Event, data interface{}) error
+	NewState  State
 }
 
 // IsNone check if State is a none value
