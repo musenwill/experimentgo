@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package demo;
+
+service DemoService {
+  rpc Hello (HelloRequest) returns (HelloResponse);
+  rpc
+}
+
+message HelloRequest {
+    string greet = 1;
+}
+
+message HelloResponse {
+    enum Code {
+        OK = 0;
+        ERROR = 1;
+    }
+    Code code = 1;
+    string msg = 2;
+    string reply = 3;
+}
+
+message
