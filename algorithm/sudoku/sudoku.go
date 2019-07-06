@@ -64,9 +64,9 @@ func (s *Sudoku) getRelatedGrids(hp *minHeap, crd coordinate) []*blankGrid {
 	return related
 }
 
-func (s *Sudoku) recurse(board Board, hp *minHeap) {
+func (s *Sudoku) recurse(board Board, hp *minHeap, results chan<- Board) {
 	if len(*hp) <= 0 {
-		board.Print()
+		results <- board
 		return
 	}
 
@@ -80,18 +80,19 @@ func (s *Sudoku) recurse(board Board, hp *minHeap) {
 		for _, r := range related {
 			r.remove(k)
 		}
-		s.recurse(board.copy(), cp)
+		s.recurse(board.copy(), cp, results)
 	}
 }
 
-func (s *Sudoku) Solve() {
+func (s *Sudoku) Solve(results chan<- Board) {
 	error := s.init()
 	if nil != error {
 		fmt.Println(error)
 		return
 	}
 
-	s.recurse(s.Board, s.minHeap)
+	s.recurse(s.Board, s.minHeap, results)
+	close(results)
 }
 
 func New(board Board) *Sudoku {
