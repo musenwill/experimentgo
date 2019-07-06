@@ -18,7 +18,7 @@ build: check
 	${GO_EXECUTABLE} build ${LDFLAGS} -o ${BINARY}
 
 check:
-	golint ./... | grep -v exported
+	golint ./... | grep -v "exported" | exit 0
 	go vet ./...
 	gofmt -d -s `find . -name "*.go" -type f`
 

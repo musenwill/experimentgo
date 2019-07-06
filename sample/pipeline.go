@@ -38,5 +38,4 @@ func printer(in <-chan int) {
 		squ := <-in
 		fmt.Print("\r", squ)
 	}
-	fmt.Println()
 }

@@ -33,7 +33,7 @@ func BenchmarkWorkerPool(b *testing.B) {
 	workers.Wait(nil)
 }
 
-func ExampleWorkerPool() {
+func ExampleVellus() {
 	workers := NewVellus(10)
 	var wg sync.WaitGroup
 	wg.Add(1)
