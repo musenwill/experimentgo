@@ -1,5 +1,4 @@
 GO_EXECUTABLE ?= go
-LINT_TOOL ?= golint ./...
 HEAD = `git describe --abbrev=0 --tags`
 TIME = `date +%FT%T%z`
 
@@ -15,14 +14,13 @@ else
 	os=linux
 endif
 
-build: lint spell
+build: check
 	${GO_EXECUTABLE} build ${LDFLAGS} -o ${BINARY}
 
-lint:
-	${LINT_TOOL}
-
-spell:
-	echo "spell check"
+check:
+	golint ./... | grep -v exported
+	go vet ./...
+	gofmt -d -s `find . -name "*.go" -type f`
 
 
 clean:
@@ -44,4 +42,4 @@ build-os:
 	-arch="amd64" \
 	-output="dist/{{.OS}}-{{.Arch}}/${BINARY}" .
 
-.PHONY: build build-all build-os clean
+.PHONY: build build-all build-os clean check
