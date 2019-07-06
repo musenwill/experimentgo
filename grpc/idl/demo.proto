@@ -1,10 +1,13 @@
 syntax = "proto3";
 
-package demo;
+package idl;
+
+option go_package = "idl";
+
+enum SERVICE_NAME { DEMO_SERVICE = 0; }
 
 service DemoService {
   rpc Hello (HelloRequest) returns (HelloResponse);
-  rpc
 }
 
 message HelloRequest {
@@ -20,5 +23,3 @@ message HelloResponse {
     string msg = 2;
     string reply = 3;
 }
-
-message
