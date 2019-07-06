@@ -3,15 +3,17 @@ package sudoku
 import (
 	"container/heap"
 	"fmt"
+	// "sync"
+	// "github.com:musenwill/tunny"
 )
 
 type Sudoku struct {
 	Board   Board
-	minHeap minHeap
+	minHeap *minHeap
 }
 
 func (s *Sudoku) init() error {
-	s.minHeap = minHeap{}
+	s.minHeap = &minHeap{}
 
 	for x := 0; x < rows; x++ {
 		for y := 0; y < cols; y++ {
@@ -26,12 +28,12 @@ func (s *Sudoku) init() error {
 			}
 		}
 	}
-	heap.Init(&s.minHeap)
+	heap.Init(s.minHeap)
 	return nil
 }
 
 func (s *Sudoku) printHeap() {
-	for _, val := range s.minHeap {
+	for _, val := range *s.minHeap {
 		val.print()
 	}
 }
@@ -88,7 +90,8 @@ func (s *Sudoku) Solve() {
 		fmt.Println(error)
 		return
 	}
-	s.recurse(s.Board, &s.minHeap)
+
+	s.recurse(s.Board, s.minHeap)
 }
 
 func New(board Board) *Sudoku {
