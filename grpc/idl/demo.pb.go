@@ -10,6 +10,10 @@ It is generated from these files:
 It has these top-level messages:
 	HelloRequest
 	HelloResponse
+	WriteRequest
+	WriteResponse
+	ReadRequest
+	ReadResponse
 */
 package idl
 
@@ -72,6 +76,48 @@ func (x HelloResponse_Code) String() string {
 }
 func (HelloResponse_Code) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{1, 0} }
 
+type WriteResponse_Code int32
+
+const (
+	WriteResponse_OK    WriteResponse_Code = 0
+	WriteResponse_ERROR WriteResponse_Code = 1
+)
+
+var WriteResponse_Code_name = map[int32]string{
+	0: "OK",
+	1: "ERROR",
+}
+var WriteResponse_Code_value = map[string]int32{
+	"OK":    0,
+	"ERROR": 1,
+}
+
+func (x WriteResponse_Code) String() string {
+	return proto.EnumName(WriteResponse_Code_name, int32(x))
+}
+func (WriteResponse_Code) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{3, 0} }
+
+type ReadResponse_Code int32
+
+const (
+	ReadResponse_OK    ReadResponse_Code = 0
+	ReadResponse_ERROR ReadResponse_Code = 1
+)
+
+var ReadResponse_Code_name = map[int32]string{
+	0: "OK",
+	1: "ERROR",
+}
+var ReadResponse_Code_value = map[string]int32{
+	"OK":    0,
+	"ERROR": 1,
+}
+
+func (x ReadResponse_Code) String() string {
+	return proto.EnumName(ReadResponse_Code_name, int32(x))
+}
+func (ReadResponse_Code) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{5, 0} }
+
 type HelloRequest struct {
 	Greet string `protobuf:"bytes,1,opt,name=greet" json:"greet,omitempty"`
 }
@@ -120,11 +166,113 @@ func (m *HelloResponse) GetReply() string {
 	return ""
 }
 
+type WriteRequest struct {
+	Data []byte `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+}
+
+func (m *WriteRequest) Reset()                    { *m = WriteRequest{} }
+func (m *WriteRequest) String() string            { return proto.CompactTextString(m) }
+func (*WriteRequest) ProtoMessage()               {}
+func (*WriteRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+
+func (m *WriteRequest) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type WriteResponse struct {
+	Code   WriteResponse_Code `protobuf:"varint,1,opt,name=code,enum=idl.WriteResponse_Code" json:"code,omitempty"`
+	Msg    string             `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
+	DataID string             `protobuf:"bytes,3,opt,name=dataID" json:"dataID,omitempty"`
+}
+
+func (m *WriteResponse) Reset()                    { *m = WriteResponse{} }
+func (m *WriteResponse) String() string            { return proto.CompactTextString(m) }
+func (*WriteResponse) ProtoMessage()               {}
+func (*WriteResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+
+func (m *WriteResponse) GetCode() WriteResponse_Code {
+	if m != nil {
+		return m.Code
+	}
+	return WriteResponse_OK
+}
+
+func (m *WriteResponse) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
+func (m *WriteResponse) GetDataID() string {
+	if m != nil {
+		return m.DataID
+	}
+	return ""
+}
+
+type ReadRequest struct {
+	DataID string `protobuf:"bytes,1,opt,name=dataID" json:"dataID,omitempty"`
+}
+
+func (m *ReadRequest) Reset()                    { *m = ReadRequest{} }
+func (m *ReadRequest) String() string            { return proto.CompactTextString(m) }
+func (*ReadRequest) ProtoMessage()               {}
+func (*ReadRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+
+func (m *ReadRequest) GetDataID() string {
+	if m != nil {
+		return m.DataID
+	}
+	return ""
+}
+
+type ReadResponse struct {
+	Code ReadResponse_Code `protobuf:"varint,1,opt,name=code,enum=idl.ReadResponse_Code" json:"code,omitempty"`
+	Msg  string            `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
+	Data []byte            `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+}
+
+func (m *ReadResponse) Reset()                    { *m = ReadResponse{} }
+func (m *ReadResponse) String() string            { return proto.CompactTextString(m) }
+func (*ReadResponse) ProtoMessage()               {}
+func (*ReadResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+
+func (m *ReadResponse) GetCode() ReadResponse_Code {
+	if m != nil {
+		return m.Code
+	}
+	return ReadResponse_OK
+}
+
+func (m *ReadResponse) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
+func (m *ReadResponse) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*HelloRequest)(nil), "idl.HelloRequest")
 	proto.RegisterType((*HelloResponse)(nil), "idl.HelloResponse")
+	proto.RegisterType((*WriteRequest)(nil), "idl.WriteRequest")
+	proto.RegisterType((*WriteResponse)(nil), "idl.WriteResponse")
+	proto.RegisterType((*ReadRequest)(nil), "idl.ReadRequest")
+	proto.RegisterType((*ReadResponse)(nil), "idl.ReadResponse")
 	proto.RegisterEnum("idl.SERVICE_NAME", SERVICE_NAME_name, SERVICE_NAME_value)
 	proto.RegisterEnum("idl.HelloResponse_Code", HelloResponse_Code_name, HelloResponse_Code_value)
+	proto.RegisterEnum("idl.WriteResponse_Code", WriteResponse_Code_name, WriteResponse_Code_value)
+	proto.RegisterEnum("idl.ReadResponse_Code", ReadResponse_Code_name, ReadResponse_Code_value)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -139,6 +287,8 @@ const _ = grpc.SupportPackageIsVersion4
 
 type DemoServiceClient interface {
 	Hello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
+	Write(ctx context.Context, opts ...grpc.CallOption) (DemoService_WriteClient, error)
+	Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (DemoService_ReadClient, error)
 }
 
 type demoServiceClient struct {
@@ -158,10 +308,78 @@ func (c *demoServiceClient) Hello(ctx context.Context, in *HelloRequest, opts ..
 	return out, nil
 }
 
+func (c *demoServiceClient) Write(ctx context.Context, opts ...grpc.CallOption) (DemoService_WriteClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_DemoService_serviceDesc.Streams[0], c.cc, "/idl.DemoService/Write", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &demoServiceWriteClient{stream}
+	return x, nil
+}
+
+type DemoService_WriteClient interface {
+	Send(*WriteRequest) error
+	CloseAndRecv() (*WriteResponse, error)
+	grpc.ClientStream
+}
+
+type demoServiceWriteClient struct {
+	grpc.ClientStream
+}
+
+func (x *demoServiceWriteClient) Send(m *WriteRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *demoServiceWriteClient) CloseAndRecv() (*WriteResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(WriteResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *demoServiceClient) Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (DemoService_ReadClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_DemoService_serviceDesc.Streams[1], c.cc, "/idl.DemoService/Read", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &demoServiceReadClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type DemoService_ReadClient interface {
+	Recv() (*ReadResponse, error)
+	grpc.ClientStream
+}
+
+type demoServiceReadClient struct {
+	grpc.ClientStream
+}
+
+func (x *demoServiceReadClient) Recv() (*ReadResponse, error) {
+	m := new(ReadResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // Server API for DemoService service
 
 type DemoServiceServer interface {
 	Hello(context.Context, *HelloRequest) (*HelloResponse, error)
+	Write(DemoService_WriteServer) error
+	Read(*ReadRequest, DemoService_ReadServer) error
 }
 
 func RegisterDemoServiceServer(s *grpc.Server, srv DemoServiceServer) {
@@ -186,6 +404,53 @@ func _DemoService_Hello_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DemoService_Write_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DemoServiceServer).Write(&demoServiceWriteServer{stream})
+}
+
+type DemoService_WriteServer interface {
+	SendAndClose(*WriteResponse) error
+	Recv() (*WriteRequest, error)
+	grpc.ServerStream
+}
+
+type demoServiceWriteServer struct {
+	grpc.ServerStream
+}
+
+func (x *demoServiceWriteServer) SendAndClose(m *WriteResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *demoServiceWriteServer) Recv() (*WriteRequest, error) {
+	m := new(WriteRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _DemoService_Read_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ReadRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(DemoServiceServer).Read(m, &demoServiceReadServer{stream})
+}
+
+type DemoService_ReadServer interface {
+	Send(*ReadResponse) error
+	grpc.ServerStream
+}
+
+type demoServiceReadServer struct {
+	grpc.ServerStream
+}
+
+func (x *demoServiceReadServer) Send(m *ReadResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _DemoService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "idl.DemoService",
 	HandlerType: (*DemoServiceServer)(nil),
@@ -195,27 +460,45 @@ var _DemoService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _DemoService_Hello_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Write",
+			Handler:       _DemoService_Write_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Read",
+			Handler:       _DemoService_Read_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "demo.proto",
 }
 
 func init() { proto.RegisterFile("demo.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 238 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0x49, 0xcd, 0xcd,
-	0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xce, 0x4c, 0xc9, 0x51, 0x52, 0xe1, 0xe2, 0xf1,
-	0x48, 0xcd, 0xc9, 0xc9, 0x0f, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x12, 0xe1, 0x62, 0x4d,
-	0x2f, 0x4a, 0x4d, 0x2d, 0x91, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0x70, 0x94, 0xea, 0xb9,
-	0x78, 0xa1, 0xaa, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0x85, 0xb4, 0xb9, 0x58, 0x92, 0xf3, 0x53,
-	0x52, 0xc1, 0xaa, 0xf8, 0x8c, 0xc4, 0xf5, 0x32, 0x53, 0x72, 0xf4, 0x50, 0x54, 0xe8, 0x39, 0xe7,
-	0xa7, 0xa4, 0x06, 0x81, 0x15, 0x09, 0x09, 0x70, 0x31, 0xe7, 0x16, 0xa7, 0x4b, 0x30, 0x81, 0x4d,
-	0x04, 0x31, 0x41, 0xb6, 0x14, 0xa5, 0x16, 0xe4, 0x54, 0x4a, 0x30, 0x43, 0x6c, 0x01, 0x73, 0x94,
-	0x24, 0xb9, 0x58, 0x40, 0xba, 0x84, 0xd8, 0xb8, 0x98, 0xfc, 0xbd, 0x05, 0x18, 0x84, 0x38, 0xb9,
-	0x58, 0x5d, 0x83, 0x82, 0xfc, 0x83, 0x04, 0x18, 0xb5, 0x14, 0xb8, 0x78, 0x82, 0x5d, 0x83, 0xc2,
-	0x3c, 0x9d, 0x5d, 0xe3, 0xfd, 0x1c, 0x7d, 0x5d, 0x85, 0x04, 0xb8, 0x78, 0x5c, 0x5c, 0x7d, 0xfd,
-	0xe3, 0xa1, 0x82, 0x02, 0x0c, 0x46, 0xb6, 0x5c, 0xdc, 0x2e, 0xa9, 0xb9, 0xf9, 0xc1, 0xa9, 0x45,
-	0x65, 0x99, 0xc9, 0xa9, 0x42, 0x7a, 0x5c, 0xac, 0x60, 0xf7, 0x08, 0x09, 0x22, 0xbb, 0x0d, 0xec,
-	0x47, 0x29, 0x21, 0x4c, 0xe7, 0x3a, 0xb1, 0x46, 0x81, 0x82, 0x23, 0x89, 0x0d, 0x1c, 0x34, 0xc6,
-	0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x0e, 0xce, 0xd1, 0x9a, 0x28, 0x01, 0x00, 0x00,
+	// 351 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0xd1, 0x4a, 0xeb, 0x40,
+	0x10, 0x86, 0xbb, 0x4d, 0x52, 0xe8, 0x34, 0x3d, 0xa4, 0xc3, 0xa1, 0x56, 0xaf, 0x4a, 0x50, 0x28,
+	0x15, 0x43, 0xa9, 0x4f, 0xa0, 0x6d, 0xc0, 0x22, 0xb5, 0xb0, 0x05, 0x05, 0x6f, 0x4a, 0xed, 0x0e,
+	0x25, 0x90, 0xba, 0x35, 0x89, 0x82, 0x78, 0x21, 0xbe, 0x88, 0xcf, 0x2a, 0xd9, 0x6c, 0x30, 0xa1,
+	0x98, 0xbb, 0xdd, 0xf0, 0x65, 0xe6, 0x9b, 0xf9, 0x17, 0x40, 0xd0, 0x4e, 0x7a, 0xfb, 0x48, 0x26,
+	0x12, 0x8d, 0x40, 0x84, 0xee, 0x29, 0xd8, 0x37, 0x14, 0x86, 0x92, 0xd3, 0xcb, 0x2b, 0xc5, 0x09,
+	0xfe, 0x07, 0x6b, 0x1b, 0x11, 0x25, 0x3d, 0xd6, 0x67, 0x83, 0x26, 0xcf, 0x2e, 0xee, 0x27, 0xb4,
+	0x35, 0x15, 0xef, 0xe5, 0x73, 0x4c, 0x78, 0x0e, 0xe6, 0x46, 0x0a, 0x52, 0xd4, 0xbf, 0xf1, 0x91,
+	0x17, 0x88, 0xd0, 0x2b, 0x11, 0xde, 0x44, 0x0a, 0xe2, 0x0a, 0x42, 0x07, 0x8c, 0x5d, 0xbc, 0xed,
+	0xd5, 0x55, 0xc5, 0xf4, 0x98, 0x76, 0x89, 0x68, 0x1f, 0xbe, 0xf7, 0x8c, 0xac, 0x8b, 0xba, 0xb8,
+	0xc7, 0x60, 0xa6, 0x7f, 0x61, 0x03, 0xea, 0x8b, 0x5b, 0xa7, 0x86, 0x4d, 0xb0, 0x7c, 0xce, 0x17,
+	0xdc, 0x61, 0xae, 0x0b, 0xf6, 0x43, 0x14, 0x24, 0x94, 0x6b, 0x22, 0x98, 0x62, 0x9d, 0xac, 0x55,
+	0x7f, 0x9b, 0xab, 0xb3, 0xfb, 0xc5, 0xa0, 0xad, 0xa1, 0x0a, 0xcb, 0x12, 0x51, 0x6d, 0xd9, 0x85,
+	0x46, 0x5a, 0x78, 0x36, 0xd5, 0x9a, 0xfa, 0x56, 0xe5, 0x79, 0x06, 0x2d, 0x4e, 0x6b, 0x91, 0x6b,
+	0xfe, 0x56, 0x60, 0xa5, 0x0a, 0x1f, 0x60, 0x67, 0x98, 0x16, 0x1d, 0x96, 0x44, 0xbb, 0x4a, 0xb4,
+	0x08, 0x54, 0x7b, 0xe6, 0xcb, 0x30, 0x0a, 0xcb, 0xf8, 0xdb, 0x71, 0xd8, 0x07, 0x7b, 0xe9, 0xf3,
+	0xfb, 0xd9, 0xc4, 0x5f, 0xdd, 0x5d, 0xcd, 0x7d, 0x74, 0xc0, 0x9e, 0xfa, 0xf3, 0xc5, 0x4a, 0x7f,
+	0x74, 0x6a, 0xe3, 0x6f, 0x06, 0xad, 0x29, 0xed, 0xe4, 0x92, 0xa2, 0xb7, 0x60, 0x43, 0xe8, 0x81,
+	0xa5, 0xc2, 0xc5, 0x4e, 0x31, 0x68, 0x35, 0xe2, 0x09, 0x1e, 0x66, 0x8f, 0x23, 0xb0, 0xd4, 0x9a,
+	0x35, 0x5f, 0x4c, 0x4e, 0xf3, 0xa5, 0x14, 0x06, 0x0c, 0x2f, 0xc0, 0x4c, 0xe7, 0x45, 0xa7, 0x30,
+	0x7a, 0xc6, 0x77, 0x0e, 0x96, 0x31, 0x62, 0xd7, 0xd6, 0x63, 0xfa, 0x78, 0x9f, 0x1a, 0xea, 0x21,
+	0x5f, 0xfe, 0x04, 0x00, 0x00, 0xff, 0xff, 0x0b, 0xdf, 0xf8, 0x4d, 0xd6, 0x02, 0x00, 0x00,
 }
