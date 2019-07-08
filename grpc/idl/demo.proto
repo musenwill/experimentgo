@@ -7,7 +7,9 @@ option go_package = "idl";
 enum SERVICE_NAME { DEMO_SERVICE = 0; }
 
 service DemoService {
-  rpc Hello (HelloRequest) returns (HelloResponse);
+    rpc Hello (HelloRequest) returns (HelloResponse);
+    rpc Write (stream WriteRequest) returns (WriteResponse);
+    rpc Read (ReadRequest) returns (stream ReadResponse);
 }
 
 message HelloRequest {
@@ -22,4 +24,32 @@ message HelloResponse {
     Code code = 1;
     string msg = 2;
     string reply = 3;
+}
+
+message WriteRequest {
+    bytes data = 1;
+}
+
+message WriteResponse {
+    enum Code {
+        OK = 0;
+        ERROR = 1;
+    }
+    Code code = 1;
+    string msg = 2;
+    string dataID = 3;
+}
+
+message ReadRequest {
+    string dataID = 1;
+}
+
+message ReadResponse {
+    enum Code {
+        OK = 0;
+        ERROR = 1;
+    }
+    Code code = 1;
+    string msg = 2;
+    bytes data = 3;
 }
