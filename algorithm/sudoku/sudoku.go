@@ -3,8 +3,6 @@ package sudoku
 import (
 	"container/heap"
 	"fmt"
-	// "sync"
-	// "github.com:musenwill/tunny"
 )
 
 type Sudoku struct {
