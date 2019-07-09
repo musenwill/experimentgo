@@ -21,7 +21,7 @@ check:
 	golint ./... | grep -v "exported" | exit 0
 	go vet ./...
 	gofmt -d -s `find . -name "*.go" -type f`
-
+	go test ./...
 
 clean:
 	rm -f ${BINARY}
