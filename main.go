@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "github.com/musenwill/experimentgo/sample"
 
 var (
 	// Version should be a git tag
@@ -22,6 +20,5 @@ func init() {
 }
 
 func main() {
-	fmt.Println(Version)
-	fmt.Println(BuildTime)
+	sample.Once()
 }
