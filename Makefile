@@ -1,11 +1,11 @@
 GO_EXECUTABLE ?= go
-HEAD = `git describe --abbrev=0 --tags`
+VERSION = `git describe --always --tags --abbrev=0 | tr -d "[\r\n]"`
 TIME = `date +%FT%T%z`
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 BINARY := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
-LDFLAGS= -ldflags "-X main.Version=${HEAD} -X main.BuildTime=${TIME}"
+LDFLAGS= -ldflags "-X main.Version=${VERSION} -X main.BuildTime=${TIME}"
 
 UNAME = $(shell uname)
 ifeq (${UNAME}, Darwin)
