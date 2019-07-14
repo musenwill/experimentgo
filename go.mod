@@ -3,6 +3,7 @@ module github.com/musenwill/experimentgo
 go 1.12
 
 require (
+	github.com/emirpasic/gods v1.12.0
 	github.com/golang/protobuf v1.3.1
 	github.com/google/uuid v1.1.1
 	github.com/julienschmidt/httprouter v1.2.0
