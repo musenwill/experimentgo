@@ -100,6 +100,26 @@ func (t *Tree) inOrderValues(root *Node, values *[]interface{}) {
 	t.inOrderValues(root.Right, values)
 }
 
+func (t *Tree) preOrderValues(root *Node, values *[]interface{}) {
+	if root == nil {
+		return
+	}
+
+	*values = append(*values, root.Value)
+	t.preOrderValues(root.Left, values)
+	t.preOrderValues(root.Right, values)
+}
+
+func (t *Tree) postOrderValues(root *Node, values *[]interface{}) {
+	if root == nil {
+		return
+	}
+
+	t.preOrderValues(root.Left, values)
+	t.preOrderValues(root.Right, values)
+	*values = append(*values, root.Value)
+}
+
 func (t *Tree) get(key interface{}) *Node {
 	node := t.root
 
