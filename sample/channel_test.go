@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+/* for range 会保证 channel 的数据全部读取完 */
 func TestRangeChannel(t *testing.T) {
 	consumeChannel(func(msg <-chan string, msgCount, sleepMillisecond int) {
 		count := 0
@@ -94,4 +95,51 @@ func consumeChannel(f func(msg <-chan string, msgCount, sleepMillisecond int)) {
 	}
 	close(msg)
 	wg.Wait()
+}
+
+/* 只要还有空间，buffered channel 就可以无阻塞的继续写入 */
+func TestWriteChannelNoneBlock(t *testing.T) {
+	timer := time.NewTimer(2 * time.Millisecond)
+	val := make(chan int, 1)
+	timeout := false
+
+loop:
+	for i := 0; i < 1; i++ {
+		select {
+		case val <- i:
+		case <-timer.C:
+			timeout = true
+			break loop
+		}
+	}
+	close(val)
+
+	if exp, act := 1, len(val); exp != act {
+		t.Errorf("got %v expected %v", act, exp)
+	}
+	if exp, act := false, timeout; exp != act {
+		t.Errorf("got %v expected %v", act, exp)
+	}
+}
+
+/* 对于 channel 来说，只要没有接收者，发送者就会阻塞，它并不是 size = 1 的 buffered channel */
+func TestWriteChannelBlock(t *testing.T) {
+	timer := time.NewTimer(2 * time.Millisecond)
+	val := make(chan int)
+	timeout := false
+
+loop:
+	for i := 0; i < 1; i++ {
+		select {
+		case val <- i:
+		case <-timer.C:
+			timeout = true
+			break loop
+		}
+	}
+	close(val)
+
+	if exp, act := true, timeout; exp != act {
+		t.Errorf("got %v expected %v", act, exp)
+	}
 }
