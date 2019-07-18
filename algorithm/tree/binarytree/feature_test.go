@@ -79,3 +79,32 @@ func TestInorderValuesWithoutRecursion(t *testing.T) {
 		}
 	}
 }
+
+func TestCalcPostOrder(t *testing.T) {
+	preOrder := []interface{}{"a", "b", "d", "h", "e", "c", "f", "g"}
+	inOrder := []interface{}{"h", "d", "b", "e", "a", "f", "c", "g"}
+	postOrder := []interface{}{"h", "d", "e", "b", "f", "g", "c", "a"}
+
+	result, err := calcPostOrder(preOrder, inOrder)
+	if exp, act := postOrder, result; err != nil || !compareSlice(exp, act) {
+		t.Errorf("got %v expected %v, err %v", act, exp, err)
+	}
+}
+
+func compareSlice(a, b []interface{}) bool {
+	lenA, lenB := len(a), len(b)
+	if lenA != lenB {
+		return false
+	}
+	minLen := lenA
+	if lenB < minLen {
+		minLen = lenB
+	}
+
+	for i := 0; i < minLen; i++ {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}

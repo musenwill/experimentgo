@@ -115,8 +115,8 @@ func (t *Tree) postOrderValues(root *Node, values *[]interface{}) {
 		return
 	}
 
-	t.preOrderValues(root.Left, values)
-	t.preOrderValues(root.Right, values)
+	t.postOrderValues(root.Left, values)
+	t.postOrderValues(root.Right, values)
 	*values = append(*values, root.Value)
 }
 
