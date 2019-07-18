@@ -67,7 +67,9 @@ func (t *Tree) rightNeighbor(node *Node) *Node {
 # 根据前序遍历结果与中序遍历结果逆向构造二叉树
 
 比如如下用例:
+
 pre order: a b d h e c f g
+
 in  order: h d b e a f c g
 
 采用分治思想，从底向上逐步构造，具体而言:
@@ -83,7 +85,7 @@ in  order: h d b e a f c g
 代码实现见 calcPostOrder
 
 如果元素有重复，那么可能会有多种解，情况不唯一，如下面两棵树，它们有着一样的前序和中序序列:
-
+```
 ┌── a
 a
 |   ┌── d
@@ -94,6 +96,7 @@ a       ┌── a
 |   ┌── d
 └── b
     └── c
+```
 
 pre order: a b c d a 
 in  order: c b d a a
