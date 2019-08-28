@@ -3,6 +3,7 @@ module github.com/musenwill/experimentgo
 go 1.12
 
 require (
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.15+incompatible
 	github.com/coreos/go-semver v0.3.0 // indirect
@@ -13,12 +14,14 @@ require (
 	github.com/gogo/protobuf v1.2.1 // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/google/btree v1.0.0 // indirect
+	github.com/google/pprof v0.0.0-20190723021845-34ac40c74b70 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.9.6 // indirect
+	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
