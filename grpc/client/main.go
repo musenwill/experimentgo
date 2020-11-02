@@ -3,33 +3,117 @@ package main
 import (
 	"bytes"
 	"context"
-	"flag"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/musenwill/experimentgo/grpc/idl"
+	"github.com/urfave/cli"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 func main() {
-	var server string
-	var msg string
-	flag.StringVar(&server, "server", "localhost:9000", "server address")
-	flag.StringVar(&msg, "message", "musenwill", "message send to server")
-	flag.Parse()
+	addrFlag := cli.StringFlag{
+		Name:  "addr",
+		Usage: "server address, host:port",
+		Value: "localhost:9000",
+	}
+	msgFlag := cli.StringFlag{
+		Name:  "msg",
+		Usage: "message send to server",
+		Value: "how are you?",
+	}
+	tlsFlag := cli.BoolFlag{
+		Name: "tls",
+	}
+	caFlag := cli.StringFlag{
+		Name: "ca",
+	}
+	certFlag := cli.StringFlag{
+		Name: "cert",
+	}
+	keyFlag := cli.StringFlag{
+		Name: "key",
+	}
 
-	conn, err := grpc.Dial(server, grpc.WithInsecure())
+	app := cli.NewApp()
+	app.ErrWriter = os.Stdout
+	app.EnableBashCompletion = true
+	app.Name = "grpc client"
+	app.Author = "musenwill"
+	app.Email = "musenwill@qq.com"
+	app.Flags = []cli.Flag{addrFlag, msgFlag, tlsFlag, caFlag, certFlag, keyFlag}
+	app.Action = action
+
+	app.RunAndExitOnError()
+}
+
+func action(c *cli.Context) error {
+	addr := c.String("addr")
+	msg := c.String("msg")
+	tls := c.Bool("tls")
+
+	var dialOpt grpc.DialOption
+	if tls {
+		tlsConfig, err := tlsConfig(c)
+		if err != nil {
+			return err
+		}
+		dialOpt = grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig))
+	} else {
+		dialOpt = grpc.WithInsecure()
+	}
+
+	conn, err := grpc.Dial(addr, dialOpt)
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		return err
 	}
 	defer conn.Close()
-	c := idl.NewDemoServiceClient(conn)
+	client := idl.NewDemoServiceClient(conn)
 
-	hello(c, msg)
-	dataID := write(c)
+	hello(client, msg)
+	dataID := write(client)
 	fmt.Printf("data id: %s\n", dataID)
-	read(c, dataID)
+	read(client, dataID)
+	return nil
+}
+
+func tlsConfig(c *cli.Context) (*tls.Config, error) {
+	caPath := c.String("ca")
+	certPath := c.String("cert")
+	keyPath := c.String("key")
+
+	var pool *x509.CertPool
+	if caPath != "" {
+		ca, err := ioutil.ReadFile(caPath)
+		if err != nil {
+			return nil, err
+		}
+		pool = x509.NewCertPool()
+		pool.AppendCertsFromPEM(ca)
+	}
+
+	var certs []tls.Certificate
+	if certPath != "" && keyPath != "" {
+		cert, err := tls.LoadX509KeyPair(certPath, keyPath)
+		if err != nil {
+			return nil, err
+		}
+		certs = []tls.Certificate{cert}
+	}
+
+	tlsConfig := &tls.Config{
+		RootCAs:            pool,
+		Certificates:       certs,
+		InsecureSkipVerify: true,
+	}
+
+	return tlsConfig, nil
 }
 
 func hello(c idl.DemoServiceClient, msg string) {
@@ -61,7 +145,7 @@ func write(c idl.DemoServiceClient) string {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("write %d bytes", n)
+		// log.Printf("write %d bytes", n)
 	}
 	resp, err := wc.CloseAndRecv()
 	if err != nil {
@@ -94,7 +178,7 @@ func read(c idl.DemoServiceClient, dataID string) {
 			return
 		}
 		data = append(data, resp.Data...)
-		log.Printf("received %d bytes", len(resp.Data))
+		// log.Printf("received %d bytes", len(resp.Data))
 	}
 	fmt.Printf("data: %s\n", string(data))
 }
