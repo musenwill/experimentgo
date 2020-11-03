@@ -114,6 +114,7 @@ func tlsConfig(c *cli.Context) (*tls.Config, error) {
 	if verifyClient {
 		tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
 	}
+	tlsConfig.InsecureSkipVerify = true
 	tlsConfig.Certificates = []tls.Certificate{cert}
 	return tlsConfig, nil
 }

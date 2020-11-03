@@ -110,9 +110,10 @@ func tlsConfig(c *cli.Context) (*tls.Config, error) {
 	tlsConfig := &tls.Config{
 		RootCAs:            pool,
 		Certificates:       certs,
+		ServerName:         "falcontsdb",
 		InsecureSkipVerify: true,
 	}
-
+	tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
 	return tlsConfig, nil
 }
 

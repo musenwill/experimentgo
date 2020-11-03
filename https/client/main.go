@@ -97,9 +97,10 @@ func tlsConfig(c *cli.Context) (*tls.Config, error) {
 	}
 
 	tlsConfig := &tls.Config{
-		RootCAs:      pool,
-		Certificates: certs,
-		ServerName:   "falcontsdb",
+		RootCAs:            pool,
+		Certificates:       certs,
+		ServerName:         "falcontsdb",
+		InsecureSkipVerify: true,
 	}
 
 	return tlsConfig, nil

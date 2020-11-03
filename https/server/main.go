@@ -111,6 +111,7 @@ func tlsConfig(c *cli.Context) (*tls.Config, error) {
 		tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
 	}
 	tlsConfig.Certificates = []tls.Certificate{cert}
+	tlsConfig.ServerName = "falcontsdb"
 	return tlsConfig, nil
 }
 
